@@ -1,0 +1,1018 @@
+swagger: "2.0"
+info:
+  description: "Description"
+  version: "1.1.0"
+  title: "Minter.org Hub"
+host: "minter.org"
+consumes :
+  - "application/json"
+produces :
+  - "application/json"
+basePath: "/v1"
+schemes:
+  - "https"
+  - "http"
+securityDefinitions:
+  bearerAuth:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+parameters:
+  offsetParam:
+    in: query
+    name: limit
+    description: "The numbers of items to return (default is 20)"
+    default: 20
+    allowEmptyValue: true
+    type: "integer"
+    format: "uint64"
+  limitParam:
+    in: query
+    name: offset
+    description: "The number of items to skip before starting to collect the result set (default is 0)"
+    default: 0
+    allowEmptyValue: true
+    type: "integer"
+    format: "uint64"
+paths:
+  /registration:
+    post:
+      tags:
+        - "auth"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ProfileCreate'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Profile'
+  /login:
+    post:
+      tags:
+        - "auth"
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Profile'
+  /profiles:
+    get:
+      tags:
+        - "profile"
+      parameters:
+        - $ref: '#/parameters/offsetParam'
+        - $ref: '#/parameters/limitParam'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Profiles'
+  /profiles/{username}:
+    get:
+      tags:
+        - "profile"
+      parameters:
+        - in: path
+          name: username
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/ProfileFull'
+  /profiles/{username}/star:
+    post:
+      tags:
+        - "profile"
+      parameters:
+        - in: path
+          name: username
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/ProfileFull'
+    delete:
+      tags:
+        - "profile"
+      parameters:
+        - in: path
+          name: username
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/ProfileFull'
+  /me:
+    get:
+      tags:
+        - "me"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Profile'
+  /me/settings:
+    put:
+      tags:
+        - "me"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/ProfileUpdate"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Profile'
+  /me/notifications:
+    get:
+      tags:
+        - "me"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: type
+          required: false
+          type: "string"
+          enum:
+            - "requests"
+            - "comments"
+            - "replies"
+            - "follows"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Notifications'
+    post:
+      description: "пометить уведомления как прочитанные"
+      tags:
+        - "me"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: type
+          required: false
+          uniqueItems: true
+          type: "array"
+          items:
+            type: "integer"
+            format: "uint64"
+      responses:
+        200:
+          description: "OK"
+  /me/settings/notifications:
+    put:
+      tags:
+        - "me"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/NotificationSettings"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Profile'
+  /me/settings/password:
+    put:
+      tags:
+        - "me"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/PasswordUpdate"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Profile'
+  /articles:
+    get:
+      tags:
+        - "articles"
+      parameters:
+        - $ref: '#/parameters/offsetParam'
+        - $ref: '#/parameters/limitParam'
+        - in: query
+          name: followed
+          required: false
+          type: "boolean"
+          default: false
+        - in: query
+          name: sortBy
+          required: true
+          type: "string"
+          default: "date"
+          enum:
+            - "date"
+            - "comments"
+            - "rating"
+        - in: query
+          name: tag
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Articles'
+    post:
+      tags:
+        - "articles"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/ArticleCreate"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Article'
+  /articles/{articleId}:
+    get:
+      tags:
+        - "articles"
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Articles'
+    put:
+      tags:
+        - "articles"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          type: "integer"
+          format: "uint64"
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/ArticleUpdate"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Article'
+  /feeds:
+    get:
+      tags:
+        - "feeds"
+      parameters:
+        - $ref: '#/parameters/offsetParam'
+        - $ref: '#/parameters/limitParam'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Feeds'
+    post:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/FeedCreate"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Feed'
+  /feeds/{feedId}:
+    put:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/FeedUpdate"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Feed'
+    delete:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+  /feeds/{feedId}/follow:
+    post:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+    delete:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+  /feeds/{feedId}/join:
+    post:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+    delete:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+  /feeds/{feedId}/join/{userId}:
+    post:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+        - in: path
+          name: userId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+    delete:
+      tags:
+        - "feeds"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: feedId
+          required: true
+          type: "integer"
+          format: "uint64"
+        - in: path
+          name: userId
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+
+  /articles/{articleId}/vote:
+    post:
+      tags:
+        - "articles"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          type: "integer"
+          format: "uint64"
+        - name: vote
+          in: query
+          required: true
+          type: "integer"
+          format: "int64"
+          enum:
+            - -1
+            - 0
+            - 1
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "integer"
+            format: "int64"
+  /articles/{articleId}/comments:
+    get:
+      tags:
+        - "comments"
+      parameters:
+        - name: articleId
+          in: path
+          required: true
+          type: "integer"
+          format: "uint64"
+        - $ref: '#/parameters/offsetParam'
+        - $ref: '#/parameters/limitParam'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Comments'
+  /comments:
+    post:
+      tags:
+        - "comments"
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/CommentCreate"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Comment'
+  /comments/{commentId}/comments:
+    get:
+      tags:
+        - "comments"
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          type: "integer"
+        - $ref: '#/parameters/offsetParam'
+        - $ref: '#/parameters/limitParam'
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Comments'
+  /comments/{commentId}:
+    delete:
+      tags:
+        - "comments"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          type: "integer"
+          format: "uint64"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            $ref: '#/definitions/Articles'
+  /comments/{commentId}/vote:
+    post:
+      tags:
+        - "comments"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          required: true
+          type: "integer"
+          format: "uint64"
+        - name: vote
+          in: query
+          required: true
+          type: "integer"
+          format: "int64"
+          default: 0
+          enum:
+            - -1
+            - 0
+            - 1
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "integer"
+            format: "int64"
+  /me/tags:
+    get:
+      tags:
+        - "me"
+      parameters:
+        - $ref: '#/parameters/offsetParam'
+        - $ref: '#/parameters/limitParam'
+        - name: search
+          in: query
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+definitions:
+  Profiles:
+    type: "array"
+    items:
+      $ref: '#/definitions/Profile'
+  ProfileFull:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "uint64"
+      username:
+        type: "string"
+      name:
+        type: "string"
+      bio:
+        type: "string"
+      imageUrl:
+        type: "string"
+      favorited:
+        type: "boolean"
+      stars:
+        type: "integer"
+        format: "uint32"
+      owner:
+        type: array
+        uniqueItems: true
+        items:
+          type: "string"
+      member:
+        type: array
+        uniqueItems: true
+        items:
+          type: "string"
+    required:
+      - "id"
+      - "username"
+      - "name"
+      - "bio"
+      - "imageUrl"
+      - "favorited"
+      - "stars"
+      - "owner"
+      - "member"
+  Profile:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "uint64"
+      username:
+        type: "string"
+        minLength: 6
+        maxLength: 18
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      imageUrl:
+        type: "string"
+      notifications:
+        $ref: '#/definitions/Notification'
+      token:
+        type: "string"
+        example: "jwt"
+    required:
+      - "id"
+      - "username"
+      - "name"
+      - "email"
+      - "imageUrl"
+      - "notifications"
+      - "token"
+  ProfileCreate:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+        minLength: 6
+      email:
+        type: "string"
+        format: "email"
+      password:
+        type: "string"
+        minLength: 6
+      reCAPTCHA:
+        type: "string"
+        description: "reCAPTCHA v3"
+    required:
+      - "username"
+      - "email"
+      - "password"
+  ProfileUpdate:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      bio:
+        type: "string"
+      imageUrl:
+        type: "string"
+    required:
+      - "username"
+      - "name"
+      - "email"
+      - "bio"
+      - "imageUrl"
+  PasswordUpdate:
+    type: "object"
+    properties:
+      oldPassword:
+        type: "string"
+      newPassword:
+        type: "string"
+        minLength: 6
+    required:
+      - "oldPassword"
+      - "newPassword"
+  Notifications:
+    type: "array"
+    items:
+      $ref: '#/definitions/Notification'
+  Notification:
+    type: "object"
+    properties:
+      user:
+        $ref: '#/definitions/Author'
+      typeActivity:
+        type: "string"
+        enum:
+          - "requests"
+          - "comments"
+          - "replies"
+          - "follows"
+      subjectId:
+        type: "integer"
+        format: "uint64"
+      subjectText:
+        type: "string"
+      meta:
+        type: "object"
+        additionalProperties: true
+      createdAt:
+        type: "string"
+        format: "date-time"
+        description: "data for create link"
+    required:
+      - "user"
+      - "typeActivity"
+      - "meta"
+      - "subjectId"
+      - "subjectText"
+      - "createdAt"
+  NotificationSettings:
+    type: "object"
+    properties:
+      requests:
+        type: "boolean"
+      comments:
+        type: "boolean"
+      follows:
+        type: "boolean"
+    required:
+      - "requests"
+      - "comments"
+      - "follows"
+  Authors:
+    type: "array"
+    items:
+      $ref: '#/definitions/Author'
+  Author:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "uint64"
+      username:
+        type: "string"
+      imageUrl:
+        type: "string"
+      kyc:
+        type: "boolean"
+    required:
+      - "id"
+      - "username"
+      - "imageUrl"
+      - "kyc"
+  ArticleCreate:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      description:
+        type: "string"
+      imageUrl:
+        type: "string"
+      tags:
+        type: array
+        uniqueItems: true
+        maximum: 3
+        items:
+          type: "integer"
+          format: "uint64"
+    required:
+      - "title"
+      - "description"
+      - "tags"
+      - "imageUrl"
+  ArticleUpdate:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      description:
+        type: "string"
+      tags:
+        type: array
+        uniqueItems: true
+        maximum: 3
+        items:
+          type: "integer"
+          format: "uint64"
+    required:
+      - "title"
+      - "description"
+      - "tags"
+  Articles:
+    type: "array"
+    items:
+      $ref: '#/definitions/Article'
+  Article:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "uint64"
+      title:
+        type: "string"
+      description:
+        type: "string"
+      imageUrl:
+        type: "string"
+      tags:
+        type: array
+        uniqueItems: true
+        items:
+          type: "string"
+      createdAt:
+        type: "string"
+        format: "date-time"
+      author:
+        $ref: '#/definitions/Author'
+      voted:
+        type: "integer"
+        format: "int32"
+        default: 0
+        enum:
+          - 1
+          - 0
+          - -1
+      voites:
+        type: "integer"
+        format: "int64"
+        example: 15
+        default: 0
+      comments:
+        type: "integer"
+        format: "uint64"
+        default: 0
+    required:
+      - "id"
+      - "title"
+      - "description"
+      - "tags"
+      - "author"
+      - "voted"
+      - "voites"
+      - "comments"
+      - "createdAt"
+      - "imageUrl"
+  Comments:
+    type: "array"
+    items:
+      $ref: '#/definitions/Comment'
+  Comment:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "uint64"
+      articleId:
+        type: "integer"
+        format: "uint64"
+      body:
+        type: "string"
+      author:
+        $ref: '#/definitions/Author'
+      createdAt:
+        type: "string"
+        format: "date-time"
+      parentId:
+        type: "integer"
+        format: "uint64"
+        default: 0
+      voites:
+        type: "integer"
+        format: "int64"
+        example: -2
+        default: 0
+    required:
+      - "id"
+      - "body"
+      - "articleId"
+      - "author"
+      - "createdAt"
+      - "parentId"
+  CommentCreate:
+    type: "object"
+    properties:
+      articleId:
+        type: "integer"
+        format: "uint64"
+      parentId:
+        type: "integer"
+        format: "uint64"
+        default: 0
+        description: "id коментария, на котрый отвечает"
+      body:
+        type: "string"
+    required:
+      - "articleId"
+      - "body"
+  FeedCreate:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      imageUrl:
+        type: "string"
+      description:
+        type: "string"
+    required:
+      - "name"
+      - "description"
+      - "imageUrl"
+  FeedUpdate:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      imageUrl:
+        type: "string"
+      description:
+        type: "string"
+    required:
+      - "name"
+      - "description"
+      - "imageUrl"
+  Feeds:
+    type: "array"
+    items:
+      $ref: '#/definitions/Feed'
+  Feed:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "uint64"
+      name:
+        type: "string"
+      imageUrl:
+        type: "string"
+      description:
+        type: "string"
+      owner:
+        $ref: '#/definitions/Author'
+      members:
+        $ref: '#/definitions/Authors'
+      joined:
+        type: "boolean"
+      followed:
+        type: "boolean"
+      followersCount:
+        type: "integer"
+        format: "uint64"
+        default: 0
+    required:
+      - "id"
+      - "name"
+      - "description"
+      - "owner"
+      - "members"
+      - "joined"
+      - "followed"
+      - "followersCount"
+      - "imageUrl"
+  Login:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+      reCAPTCHA:
+        type: "string"
+        description: "reCAPTCHA v3"
+    required:
+      - "username"
+      - "password"
