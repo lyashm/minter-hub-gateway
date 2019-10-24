@@ -94,11 +94,6 @@ func configureAPI(api *operations.MinterOrgHubAPI) http.Handler {
 			return middleware.NotImplemented("operation comments.GetArticlesArticleIDComments has not yet been implemented")
 		})
 	}
-	if api.CommentsGetCommentsCommentIDCommentsHandler == nil {
-		api.CommentsGetCommentsCommentIDCommentsHandler = comments.GetCommentsCommentIDCommentsHandlerFunc(func(params comments.GetCommentsCommentIDCommentsParams) middleware.Responder {
-			return middleware.NotImplemented("operation comments.GetCommentsCommentIDComments has not yet been implemented")
-		})
-	}
 	if api.FeedsGetFeedsHandler == nil {
 		api.FeedsGetFeedsHandler = feeds.GetFeedsHandlerFunc(func(params feeds.GetFeedsParams) middleware.Responder {
 			return middleware.NotImplemented("operation feeds.GetFeeds has not yet been implemented")
