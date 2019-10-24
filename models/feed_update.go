@@ -21,9 +21,9 @@ type FeedUpdate struct {
 	// Required: true
 	Description *string `json:"description"`
 
-	// image Url
+	// image
 	// Required: true
-	ImageURL *string `json:"imageUrl"`
+	Image *string `json:"image"`
 
 	// name
 	// Required: true
@@ -38,7 +38,7 @@ func (m *FeedUpdate) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateImageURL(formats); err != nil {
+	if err := m.validateImage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -61,9 +61,9 @@ func (m *FeedUpdate) validateDescription(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *FeedUpdate) validateImageURL(formats strfmt.Registry) error {
+func (m *FeedUpdate) validateImage(formats strfmt.Registry) error {
 
-	if err := validate.Required("imageUrl", "body", m.ImageURL); err != nil {
+	if err := validate.Required("image", "body", m.Image); err != nil {
 		return err
 	}
 

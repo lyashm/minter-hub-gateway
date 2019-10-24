@@ -26,9 +26,9 @@ type ProfileUpdate struct {
 	// Format: email
 	Email *strfmt.Email `json:"email"`
 
-	// image Url
+	// image
 	// Required: true
-	ImageURL *string `json:"imageUrl"`
+	Image *string `json:"image"`
 
 	// name
 	// Required: true
@@ -51,7 +51,7 @@ func (m *ProfileUpdate) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateImageURL(formats); err != nil {
+	if err := m.validateImage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -91,9 +91,9 @@ func (m *ProfileUpdate) validateEmail(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ProfileUpdate) validateImageURL(formats strfmt.Registry) error {
+func (m *ProfileUpdate) validateImage(formats strfmt.Registry) error {
 
-	if err := validate.Required("imageUrl", "body", m.ImageURL); err != nil {
+	if err := validate.Required("image", "body", m.Image); err != nil {
 		return err
 	}
 

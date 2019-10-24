@@ -21,9 +21,9 @@ type Author struct {
 	// Required: true
 	ID *uint64 `json:"id"`
 
-	// image Url
+	// image
 	// Required: true
-	ImageURL *string `json:"imageUrl"`
+	Image *string `json:"image"`
 
 	// kyc
 	// Required: true
@@ -42,7 +42,7 @@ func (m *Author) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateImageURL(formats); err != nil {
+	if err := m.validateImage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -69,9 +69,9 @@ func (m *Author) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Author) validateImageURL(formats strfmt.Registry) error {
+func (m *Author) validateImage(formats strfmt.Registry) error {
 
-	if err := validate.Required("imageUrl", "body", m.ImageURL); err != nil {
+	if err := validate.Required("image", "body", m.Image); err != nil {
 		return err
 	}
 

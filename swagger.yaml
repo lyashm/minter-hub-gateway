@@ -522,22 +522,6 @@ paths:
           description: "OK"
           schema:
             $ref: '#/definitions/Comment'
-  /comments/{commentId}/comments:
-    get:
-      tags:
-        - "comments"
-      parameters:
-        - name: commentId
-          in: path
-          required: true
-          type: "integer"
-        - $ref: '#/parameters/offsetParam'
-        - $ref: '#/parameters/limitParam'
-      responses:
-        200:
-          description: "OK"
-          schema:
-            $ref: '#/definitions/Comments'
   /comments/{commentId}:
     delete:
       tags:
@@ -618,7 +602,7 @@ definitions:
         type: "string"
       bio:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
       favorited:
         type: "boolean"
@@ -640,7 +624,7 @@ definitions:
       - "username"
       - "name"
       - "bio"
-      - "imageUrl"
+      - "image"
       - "favorited"
       - "stars"
       - "owner"
@@ -660,7 +644,7 @@ definitions:
       email:
         type: "string"
         format: "email"
-      imageUrl:
+      image:
         type: "string"
       notifications:
         $ref: '#/definitions/Notification'
@@ -672,7 +656,7 @@ definitions:
       - "username"
       - "name"
       - "email"
-      - "imageUrl"
+      - "image"
       - "notifications"
       - "token"
   ProfileCreate:
@@ -706,14 +690,14 @@ definitions:
         format: "email"
       bio:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
     required:
       - "username"
       - "name"
       - "email"
       - "bio"
-      - "imageUrl"
+      - "image"
   PasswordUpdate:
     type: "object"
     properties:
@@ -785,14 +769,14 @@ definitions:
         format: "uint64"
       username:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
       kyc:
         type: "boolean"
     required:
       - "id"
       - "username"
-      - "imageUrl"
+      - "image"
       - "kyc"
   ArticleCreate:
     type: "object"
@@ -801,7 +785,7 @@ definitions:
         type: "string"
       description:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
       tags:
         type: array
@@ -814,7 +798,7 @@ definitions:
       - "title"
       - "description"
       - "tags"
-      - "imageUrl"
+      - "image"
   ArticleUpdate:
     type: "object"
     properties:
@@ -847,7 +831,7 @@ definitions:
         type: "string"
       description:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
       tags:
         type: array
@@ -886,7 +870,7 @@ definitions:
       - "voites"
       - "comments"
       - "createdAt"
-      - "imageUrl"
+      - "image"
   Comments:
     type: "array"
     items:
@@ -916,6 +900,8 @@ definitions:
         format: "int64"
         example: -2
         default: 0
+      children:
+        $ref: '#/definitions/Comments'
     required:
       - "id"
       - "body"
@@ -944,27 +930,27 @@ definitions:
     properties:
       name:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
       description:
         type: "string"
     required:
       - "name"
       - "description"
-      - "imageUrl"
+      - "image"
   FeedUpdate:
     type: "object"
     properties:
       name:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
       description:
         type: "string"
     required:
       - "name"
       - "description"
-      - "imageUrl"
+      - "image"
   Feeds:
     type: "array"
     items:
@@ -977,7 +963,7 @@ definitions:
         format: "uint64"
       name:
         type: "string"
-      imageUrl:
+      image:
         type: "string"
       description:
         type: "string"
@@ -1002,7 +988,7 @@ definitions:
       - "joined"
       - "followed"
       - "followersCount"
-      - "imageUrl"
+      - "image"
   Login:
     type: "object"
     properties:

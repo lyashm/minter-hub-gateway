@@ -21,9 +21,9 @@ type ArticleCreate struct {
 	// Required: true
 	Description *string `json:"description"`
 
-	// image Url
+	// image
 	// Required: true
-	ImageURL *string `json:"imageUrl"`
+	Image *string `json:"image"`
 
 	// tags
 	// Required: true
@@ -44,7 +44,7 @@ func (m *ArticleCreate) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateImageURL(formats); err != nil {
+	if err := m.validateImage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -71,9 +71,9 @@ func (m *ArticleCreate) validateDescription(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *ArticleCreate) validateImageURL(formats strfmt.Registry) error {
+func (m *ArticleCreate) validateImage(formats strfmt.Registry) error {
 
-	if err := validate.Required("imageUrl", "body", m.ImageURL); err != nil {
+	if err := validate.Required("image", "body", m.Image); err != nil {
 		return err
 	}
 

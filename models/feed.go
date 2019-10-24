@@ -33,9 +33,9 @@ type Feed struct {
 	// Required: true
 	ID *uint64 `json:"id"`
 
-	// image Url
+	// image
 	// Required: true
-	ImageURL *string `json:"imageUrl"`
+	Image *string `json:"image"`
 
 	// joined
 	// Required: true
@@ -74,7 +74,7 @@ func (m *Feed) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateImageURL(formats); err != nil {
+	if err := m.validateImage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -136,9 +136,9 @@ func (m *Feed) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Feed) validateImageURL(formats strfmt.Registry) error {
+func (m *Feed) validateImage(formats strfmt.Registry) error {
 
-	if err := validate.Required("imageUrl", "body", m.ImageURL); err != nil {
+	if err := validate.Required("image", "body", m.Image); err != nil {
 		return err
 	}
 

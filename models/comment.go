@@ -29,6 +29,9 @@ type Comment struct {
 	// Required: true
 	Body *string `json:"body"`
 
+	// children
+	Children Comments `json:"children,omitempty"`
+
 	// created at
 	// Required: true
 	// Format: date-time
@@ -59,6 +62,10 @@ func (m *Comment) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBody(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateChildren(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -110,6 +117,22 @@ func (m *Comment) validateAuthor(formats strfmt.Registry) error {
 func (m *Comment) validateBody(formats strfmt.Registry) error {
 
 	if err := validate.Required("body", "body", m.Body); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Comment) validateChildren(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Children) { // not required
+		return nil
+	}
+
+	if err := m.Children.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("children")
+		}
 		return err
 	}
 

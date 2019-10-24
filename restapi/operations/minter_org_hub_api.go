@@ -71,9 +71,6 @@ func NewMinterOrgHubAPI(spec *loads.Document) *MinterOrgHubAPI {
 		CommentsGetArticlesArticleIDCommentsHandler: comments.GetArticlesArticleIDCommentsHandlerFunc(func(params comments.GetArticlesArticleIDCommentsParams) middleware.Responder {
 			return middleware.NotImplemented("operation CommentsGetArticlesArticleIDComments has not yet been implemented")
 		}),
-		CommentsGetCommentsCommentIDCommentsHandler: comments.GetCommentsCommentIDCommentsHandlerFunc(func(params comments.GetCommentsCommentIDCommentsParams) middleware.Responder {
-			return middleware.NotImplemented("operation CommentsGetCommentsCommentIDComments has not yet been implemented")
-		}),
 		FeedsGetFeedsHandler: feeds.GetFeedsHandlerFunc(func(params feeds.GetFeedsParams) middleware.Responder {
 			return middleware.NotImplemented("operation FeedsGetFeeds has not yet been implemented")
 		}),
@@ -207,8 +204,6 @@ type MinterOrgHubAPI struct {
 	ArticlesGetArticlesArticleIDHandler articles.GetArticlesArticleIDHandler
 	// CommentsGetArticlesArticleIDCommentsHandler sets the operation handler for the get articles article ID comments operation
 	CommentsGetArticlesArticleIDCommentsHandler comments.GetArticlesArticleIDCommentsHandler
-	// CommentsGetCommentsCommentIDCommentsHandler sets the operation handler for the get comments comment ID comments operation
-	CommentsGetCommentsCommentIDCommentsHandler comments.GetCommentsCommentIDCommentsHandler
 	// FeedsGetFeedsHandler sets the operation handler for the get feeds operation
 	FeedsGetFeedsHandler feeds.GetFeedsHandler
 	// MeGetMeHandler sets the operation handler for the get me operation
@@ -356,10 +351,6 @@ func (o *MinterOrgHubAPI) Validate() error {
 
 	if o.CommentsGetArticlesArticleIDCommentsHandler == nil {
 		unregistered = append(unregistered, "comments.GetArticlesArticleIDCommentsHandler")
-	}
-
-	if o.CommentsGetCommentsCommentIDCommentsHandler == nil {
-		unregistered = append(unregistered, "comments.GetCommentsCommentIDCommentsHandler")
 	}
 
 	if o.FeedsGetFeedsHandler == nil {
@@ -607,11 +598,6 @@ func (o *MinterOrgHubAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/articles/{articleId}/comments"] = comments.NewGetArticlesArticleIDComments(o.context, o.CommentsGetArticlesArticleIDCommentsHandler)
-
-	if o.handlers["GET"] == nil {
-		o.handlers["GET"] = make(map[string]http.Handler)
-	}
-	o.handlers["GET"]["/comments/{commentId}/comments"] = comments.NewGetCommentsCommentIDComments(o.context, o.CommentsGetCommentsCommentIDCommentsHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

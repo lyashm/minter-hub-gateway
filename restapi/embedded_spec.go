@@ -301,35 +301,6 @@ func init() {
         }
       }
     },
-    "/comments/{commentId}/comments": {
-      "get": {
-        "tags": [
-          "comments"
-        ],
-        "parameters": [
-          {
-            "type": "integer",
-            "name": "commentId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/offsetParam"
-          },
-          {
-            "$ref": "#/parameters/limitParam"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Comments"
-            }
-          }
-        }
-      }
-    },
     "/comments/{commentId}/vote": {
       "post": {
         "security": [
@@ -1000,7 +971,7 @@ func init() {
         "voites",
         "comments",
         "createdAt",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "author": {
@@ -1022,7 +993,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "tags": {
@@ -1059,13 +1030,13 @@ func init() {
         "title",
         "description",
         "tags",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
           "type": "string"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "tags": {
@@ -1118,7 +1089,7 @@ func init() {
       "required": [
         "id",
         "username",
-        "imageUrl",
+        "image",
         "kyc"
       ],
       "properties": {
@@ -1126,7 +1097,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "kyc": {
@@ -1163,6 +1134,9 @@ func init() {
         },
         "body": {
           "type": "string"
+        },
+        "children": {
+          "$ref": "#/definitions/Comments"
         },
         "createdAt": {
           "type": "string",
@@ -1224,7 +1198,7 @@ func init() {
         "joined",
         "followed",
         "followersCount",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
@@ -1242,7 +1216,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "joined": {
@@ -1264,13 +1238,13 @@ func init() {
       "required": [
         "name",
         "description",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
           "type": "string"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
@@ -1283,13 +1257,13 @@ func init() {
       "required": [
         "name",
         "description",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
           "type": "string"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
@@ -1411,7 +1385,7 @@ func init() {
         "username",
         "name",
         "email",
-        "imageUrl",
+        "image",
         "notifications",
         "token"
       ],
@@ -1424,7 +1398,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
@@ -1477,7 +1451,7 @@ func init() {
         "username",
         "name",
         "bio",
-        "imageUrl",
+        "image",
         "favorited",
         "stars",
         "owner",
@@ -1494,7 +1468,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "member": {
@@ -1530,7 +1504,7 @@ func init() {
         "name",
         "email",
         "bio",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "bio": {
@@ -1540,7 +1514,7 @@ func init() {
           "type": "string",
           "format": "email"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
@@ -1894,47 +1868,6 @@ func init() {
         }
       }
     },
-    "/comments/{commentId}/comments": {
-      "get": {
-        "tags": [
-          "comments"
-        ],
-        "parameters": [
-          {
-            "type": "integer",
-            "name": "commentId",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "integer",
-            "format": "uint64",
-            "default": 20,
-            "description": "The numbers of items to return (default is 20)",
-            "name": "limit",
-            "in": "query",
-            "allowEmptyValue": true
-          },
-          {
-            "type": "integer",
-            "format": "uint64",
-            "default": 0,
-            "description": "The number of items to skip before starting to collect the result set (default is 0)",
-            "name": "offset",
-            "in": "query",
-            "allowEmptyValue": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Comments"
-            }
-          }
-        }
-      }
-    },
     "/comments/{commentId}/vote": {
       "post": {
         "security": [
@@ -2641,7 +2574,7 @@ func init() {
         "voites",
         "comments",
         "createdAt",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "author": {
@@ -2663,7 +2596,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "tags": {
@@ -2700,13 +2633,13 @@ func init() {
         "title",
         "description",
         "tags",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
           "type": "string"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "tags": {
@@ -2759,7 +2692,7 @@ func init() {
       "required": [
         "id",
         "username",
-        "imageUrl",
+        "image",
         "kyc"
       ],
       "properties": {
@@ -2767,7 +2700,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "kyc": {
@@ -2804,6 +2737,9 @@ func init() {
         },
         "body": {
           "type": "string"
+        },
+        "children": {
+          "$ref": "#/definitions/Comments"
         },
         "createdAt": {
           "type": "string",
@@ -2865,7 +2801,7 @@ func init() {
         "joined",
         "followed",
         "followersCount",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
@@ -2883,7 +2819,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "joined": {
@@ -2905,13 +2841,13 @@ func init() {
       "required": [
         "name",
         "description",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
           "type": "string"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
@@ -2924,13 +2860,13 @@ func init() {
       "required": [
         "name",
         "description",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "description": {
           "type": "string"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
@@ -3052,7 +2988,7 @@ func init() {
         "username",
         "name",
         "email",
-        "imageUrl",
+        "image",
         "notifications",
         "token"
       ],
@@ -3065,7 +3001,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
@@ -3118,7 +3054,7 @@ func init() {
         "username",
         "name",
         "bio",
-        "imageUrl",
+        "image",
         "favorited",
         "stars",
         "owner",
@@ -3135,7 +3071,7 @@ func init() {
           "type": "integer",
           "format": "uint64"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "member": {
@@ -3171,7 +3107,7 @@ func init() {
         "name",
         "email",
         "bio",
-        "imageUrl"
+        "image"
       ],
       "properties": {
         "bio": {
@@ -3181,7 +3117,7 @@ func init() {
           "type": "string",
           "format": "email"
         },
-        "imageUrl": {
+        "image": {
           "type": "string"
         },
         "name": {
